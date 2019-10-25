@@ -3,24 +3,55 @@ name: lxdhub ci
 on: [push]
 
 jobs:
-  build:
-
+  build-packages:
     runs-on: ubuntu-18.04
-
     steps:
     - uses: actions/checkout@v1
     - name: use node v10.x
       uses: actions/setup-node@v1
       with:
         node-version: '10.x'
+
     - name: install yarn
       run: npm install -g yarn
+
     - name: build package
       run: |
         yarn install --pure-lockfile
+
     - name: publish
       run: |
         npm install -g lerna
         lerna publish --canary --no-git-tag-version --dist-tag unstable
       env: # Or as an environment variable
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  build-lxd-container:
+    runs-on: ubuntu-18.04
+    needs: build-packages
+    steps:
+    - uses: actions/checkout@v1
+    - name: setup lxc
+      run: |
+        sudo apt-add-repository ppa:ansible/ansible -y
+        sudo apt update
+        sudo apt install --yes lxd lxd-client ansible
+        cat ansible/roles/lxd_setup/files/lxd.seed | sudo lxd init --preseed
+
+    - name: build lxdhub lxc container
+      run: |
+        sudo lxc launch ubuntu:18.04 lxdhub
+        # wait for the container to start up see: https://blog.simos.info/how-to-know-when-a-lxd-container-has-finished-starting-up/
+        sudo lxc exec lxdhub -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
+        sudo lxc exec lxdhub -- apt update
+        sudo lxc exec lxdhub -- apt install --yes python
+        sudo ansible-playbook ansible/install-lxdhub.yml -c lxd -i lxdhub,
+        sudo lxc stop lxdhub
+        sudo lxc publish local:lxdhub --alias lxdhub description="lxdhub-${{ github.sha }} ($(date +%Y%m%d_%H:%M))" --public
+        sudo lxc image export local:lxdhub /tmp/lxdhub-img
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: lxdhub container
+        path: /tmp/lxdhub-img.tar.gz
