@@ -1,0 +1,26 @@
+name: lxdhub ci
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: use node v10.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - name: install yarn
+      run: npm install -g yarn
+    - name: build package
+      run: |
+        yarn install --pure-lockfile
+    - name: publish
+      run: |
+        npm install -g lerna
+        lerna publish --canary --no-git-tag-version --dist-tag unstable
+      env: # Or as an environment variable
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
