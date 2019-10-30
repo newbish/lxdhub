@@ -11,6 +11,8 @@ certificate is being generated. If this does not occur, you
 probably already generated a certificate, which is fine.
 
 ```bash
+# LXC only generates the certificates when connecting to a remove private LXD instance over https
+lxc remote add https://us.images.linuxcontainers.org:8443
 lxc list
 ```
 
