@@ -31,7 +31,6 @@
         "typescript": "^3.7.4"
     },
     "dependencies": {
-        "@lxdhub/web": "1.10.1",
         "express": "4.17.1",
         "minimist": "1.2.0",
         "sqlite3": "4.1.0",
