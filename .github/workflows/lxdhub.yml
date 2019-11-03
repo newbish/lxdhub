@@ -56,7 +56,7 @@ jobs:
         sudo lxc exec lxdhub -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
         sudo lxc exec lxdhub -- apt update
         sudo lxc exec lxdhub -- apt install --yes python
-        sudo ansible-playbook ansible/install-lxdhub.yml -c lxd -i lxdhub,
+        sudo ansible-playbook ansible/install-lxdhub.yml -c lxd -i lxdhub, -e "lxdhub_version=$([ ${{ startsWith(github.event.ref, 'refs/tags') }} ] && echo 'unstable' || echo 'latest')"
         sudo lxc stop lxdhub
         sudo lxc publish local:lxdhub --alias lxdhub description="lxdhub-${{ github.sha }} ($(date +%Y%m%d_%H:%M))" --public
         sudo lxc image export local:lxdhub /tmp/lxdhub-img

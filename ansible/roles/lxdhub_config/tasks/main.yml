@@ -1,7 +1,8 @@
 ---
-- set_fact:
-  lxdhub_home: "{{ lxdhub_home  | default('/var/lib/lxdhub') }}"
-  npm_dist_tag: "{{ npm_dist_tag | default('unstable') }}"
+- name: set defaults
+  set_fact: |
+    lxdhub_home="{{ lxdhub_home | default('/var/lib/lxdhub') }}"
+    lxdhub_version="{{ lxdhub_version | default('latest') }}"
 
 - name: new lxdhub group
   group:
@@ -16,10 +17,17 @@
     system: yes
     home: "{{ lxdhub_home }}"
 
+- name: configure npm (install to ~/.local)
+  shell: npm config set prefix ~/.local
+  become: yes
+  become_user: lxdhub
+
 - name: install lxdhub
   shell: |
-    npm install -g @randombenj/lxdhub -t {{ npm_dist_tag }}
-    npm install -g @randombenj/lxdhub-dbsync -t {{ npm_dist_tag }}
+    npm install -g @randombenj/api@{{ lxdhub_version }}
+    npm install -g @randombenj/dbsync@{{ lxdhub_version }}
+  become: yes
+  become_user: lxdhub
 
 - name: configure lxdhub.yml
   template:
