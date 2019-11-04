@@ -1,6 +1,5 @@
 const { LXDHubAPI } = require('@lxdhub/api');
 const { LXDHubWeb } = require('@lxdhub/web');
-const lxd = require('./get-app-certs');
 const express = require('express');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
@@ -18,10 +17,9 @@ const database = {
     database: process.env.POSTGRES_DATABASE || 'lxdhub',
 };
 
-const startApiUi = async () => {
-    let app;
+(async () => {
     let server = express();
-    app = await new LXDHubWeb({
+    await new LXDHubWeb({
         hostUrl,
         port,
         logLevel,
@@ -29,16 +27,11 @@ const startApiUi = async () => {
         apiUrl,
         googleAnalytics,
     }, server).bootstrap();
-
-    app = await new LXDHubAPI({
+    await new LXDHubAPI({
         hostUrl,
         port,
         logLevel,
-        lxd,
         docUrl: '/api/v1/doc',
         database
     }, server).run();
-    return app;
-};
-
-module.exports = startApiUi;
+})();

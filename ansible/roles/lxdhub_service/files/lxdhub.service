@@ -5,7 +5,8 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/node /var/lib/lxdhub/lxdhub/bin/start.js api ui
+Environment=NODE_PATH=/usr/lib/node_modules
+ExecStart=/usr/bin/node /var/lib/lxdhub/start-api-ui.js
 Restart=on-failure
 User=lxdhub
 

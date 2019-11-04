@@ -17,17 +17,14 @@
     system: yes
     home: "{{ lxdhub_home }}"
 
-- name: configure npm (install to ~/.local)
-  shell: npm config set prefix ~/.local
-  become: yes
-  become_user: lxdhub
-
 - name: install lxdhub
   shell: |
-    npm install -g @randombenj/api@{{ lxdhub_version }}
-    npm install -g @randombenj/dbsync@{{ lxdhub_version }}
+    npm install --global @lxdhub/web
+    npm install --global @randombenj/api@{{ lxdhub_version }}
+    npm install --global @randombenj/dbsync@{{ lxdhub_version }}
+    # FIXME: do not install this manually
+    npm install --global rxjs rxjs-compat express
   become: yes
-  become_user: lxdhub
 
 - name: configure lxdhub.yml
   template:
