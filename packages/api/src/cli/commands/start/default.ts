@@ -45,12 +45,12 @@ export class StartOptions extends Options {
     @option({
         description: 'The LXD certificate for the remote'
     })
-    cert: string = 'certificates/client.crt';
+    cert: string = `${process.env.HOME}/.config/lxc/client.crt`;
 
     @option({
         description: 'The LXC key for the remote'
     })
-    key: string = 'certificates/client.key';
+    key: string = `${process.env.HOME}/.config/lxc/client.key`;
 
     @option({
         description: 'The log level'
@@ -85,9 +85,9 @@ export default class extends Command {
             },
             lxd: {
                 // @ts-ignore
-                cert: fs.readFileSync(options.cert || 'certificates/client.crt'),
+                cert: fs.readFileSync(options.cert || `${process.env.HOME}/.config/lxc/client.crt`),
                 // @ts-ignore
-                key: fs.readFileSync(options.key || 'certificates/client.key')
+                key: fs.readFileSync(options.key || `${process.env.HOME}/.config/lxc/client.key`)
             }
         };
 
