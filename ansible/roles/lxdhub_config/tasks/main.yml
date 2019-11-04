@@ -19,9 +19,9 @@
 
 - name: install lxdhub
   shell: |
-    npm install --global @lxdhub/web
-    npm install --global @randombenj/api@{{ lxdhub_version }}
-    npm install --global @randombenj/dbsync@{{ lxdhub_version }}
+    npm install --global @lxdhub/web@{{ lxdhub_version }}
+    npm install --global @lxdhub/api@{{ lxdhub_version }}
+    npm install --global @lxdhub/dbsync@{{ lxdhub_version }}
     # FIXME: do not install this manually
     npm install --global rxjs rxjs-compat express
   become: yes
