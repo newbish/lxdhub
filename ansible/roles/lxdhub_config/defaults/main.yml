@@ -1,6 +1,0 @@
----
-lxdhub_local_remote_password: unsecret
-lxdhub_home: /var/lib/lxdhub
-lxdhub_git_repo: https://github.com/Roche/lxdhub.git
-lxdhub_version: master
-

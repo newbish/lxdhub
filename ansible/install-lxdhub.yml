@@ -9,6 +9,5 @@
       become: yes
     - role: lxdhub_config
       become: yes
-    - role: build
     - role: lxdhub_service
       become: yes

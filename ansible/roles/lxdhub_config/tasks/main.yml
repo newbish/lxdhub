@@ -1,4 +1,9 @@
 ---
+- name: set defaults
+  set_fact: |
+    lxdhub_home="{{ lxdhub_home | default('/var/lib/lxdhub') }}"
+    lxdhub_version="{{ lxdhub_version | default('latest') }}"
+
 - name: new lxdhub group
   group:
     name: lxdhub
@@ -12,40 +17,26 @@
     system: yes
     home: "{{ lxdhub_home }}"
 
-- name: install git
-  apt:
-    name: git
-    state: present
-
-- debug:
-    msg: "let's use lxdhub version: {{ lxdhub_version }}"
-
-- name: clone git repository
-  git:
-    repo: '{{ lxdhub_git_repo }}'
-    dest: "{{ lxdhub_home }}/lxdhub"
-    version: "{{ lxdhub_version }}"
-    force: yes
+- name: install lxdhub
+  shell: |
+    npm install --global @lxdhub/web@{{ lxdhub_version }}
+    npm install --global @lxdhub/api@{{ lxdhub_version }}
+    npm install --global @lxdhub/dbsync@{{ lxdhub_version }}
+    # FIXME: do not install this manually
+    npm install --global rxjs rxjs-compat express
   become: yes
-  become_user: lxdhub
-  register: lxdhub_commit
-
-- name: add git hash to dummy git host
-  add_host:
-    name: git
-    hash: "{{ lxdhub_commit.after[:7] }}"
 
 - name: configure lxdhub.yml
   template:
     src: lxdhub.yml.j2
-    dest: "{{ lxdhub_home }}/lxdhub/lxdhub.yml"
+    dest: "{{ lxdhub_home }}/lxdhub.yml"
   become: yes
   become_user: lxdhub
 
 - name: generate lxd certificates for lxdhub user
-  command: 'lxc remote add mylocal https://localhost:8443 --accept-certificate --password {{ lxdhub_local_remote_password }}'
+  command: "lxc remote add mylocal https://localhost:8443 --accept-certificate --password {{ lxdhub_local_remote_password | default('unsecret') }}"
   args:
-    chdir: "{{ lxdhub_home }}/lxdhub"
+    chdir: "{{ lxdhub_home }}/"
   become: yes
   become_user: lxdhub
   ignore_errors: yes
