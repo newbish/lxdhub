@@ -11,7 +11,7 @@ export class SyncRunController {
     private readonly syncRunService: SyncRunService) {}
 
   @Get('/')
-  @ApiResponse({ status: 200, description: 'The sync runs have been succesfully request' })
+  @ApiResponse({ status: 200, description: 'The sync runs have been successfully request' })
   async findAll(
     @Query(new ValidationPipe({ transform: true }))
     paginate: PaginationOptionsDto

@@ -102,4 +102,20 @@ export class ImageService {
 
         return new ResponseDto<CloneImageResponseDto>({ uuid });
     }
+
+    /**
+     * Clones an image to a specific remote
+     * @param imageId The id of the image, which should get cloned
+     * @param cloneImageDto The dto, which contains the remote information
+     */
+    async importImage(image: any, remote: string, alias: string[]) {
+        if (!image) throw new NotFoundException('Image not found');
+
+        const uuid = await this.lxdService.importImage(
+            image,
+            remote
+        );
+
+        return uuid;
+    }
 }

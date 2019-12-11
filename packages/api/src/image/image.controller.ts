@@ -11,6 +11,8 @@ import {
   ValidationPipe,
   NotFoundException,
   InternalServerErrorException,
+  UploadedFile,
+  Logger
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 
@@ -18,6 +20,7 @@ import { CloneImageDto, CloneImageResponseDto, ImageDetailDto, ImageListOptions,
 import { ResponseDto } from '@lxdhub/interfaces';
 import { ImageService } from './image.service';
 import { ImageListItemInterceptor } from './interceptors/image-list-item.interceptor';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 /**
  * The Image Controller, which is the API
@@ -25,9 +28,12 @@ import { ImageListItemInterceptor } from './interceptors/image-list-item.interce
  */
 @Controller('/api/v1/image')
 export class ImageController {
+  private logger;
   constructor(
-    private readonly imageService: ImageService
-  ) { }
+    private readonly imageService: ImageService,
+  ) {
+    this.logger = new Logger('image.controller');
+  }
 
   /**
    * Returns images, limited by the given pagination options and
@@ -95,5 +101,19 @@ export class ImageController {
   )
     : Promise<ResponseDto<CloneImageResponseDto>> {
     return await this.imageService.cloneImage(id, cloneImageDto);
+  }
+
+  @Post('/')
+  @ApiResponse({ status: 200, description: 'The image was imported successfully' })
+  @UseInterceptors(FileInterceptor('image'))
+  async import(
+    @UploadedFile() image
+  ) {
+    console.log(image);
+    try {
+     return await this.imageService.importImage(image, 'https://lxdhub-dev-0.node.infra.devops.roche.com:8443', []);
+    } catch(err) {
+      console.log(err);
+    }
   }
 }

@@ -106,11 +106,34 @@ export class LXDService {
   /**
    * Waits for the clone operation and returns the result
    * @param destinationRemote The destination remote
-   * @param uuid The operation UUID from the LXD server
+   * @param operation The operation UUID from the LXD server
    */
-  async getCloneStatus(destinationRemote: Remote, uuid: string) {
+  async wait(remote: string, operation: string) {
     return await this.waitForOperation(
-      `${destinationRemote.serverUrl}/1.0/operations/${uuid}/wait`
+      `${remote}/1.0/operations/${operation}/wait`
     );
+  }
+
+  async importImage(image: any, remote: string) {
+    const axios = this.getAxiosHttpsInstance();
+
+    try {
+      const data = (await axios.post(`${remote}/1.0/images`, image.buffer, {
+        headers: {
+          'X-LXD-Public': '1',
+        },
+        maxContentLength: Infinity
+      })).data;
+
+        // wait for the import operation to finish
+      return (await axios.get(`${remote}/${data.operation}`)).data;
+    } catch (err) {
+      console.log(err.stack);
+      throw err;
+    }
+  }
+
+  async addImageAlias(fingerprint: string, aliases: string[]) {
+
   }
 }
