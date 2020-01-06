@@ -107,13 +107,9 @@ export class ImageController {
   @ApiResponse({ status: 200, description: 'The image was imported successfully' })
   @UseInterceptors(FileInterceptor('image'))
   async import(
-    @UploadedFile() image
+    @UploadedFile() image,
+    @Body('aliases') aliases: string[]
   ) {
-    console.log(image);
-    try {
-     return await this.imageService.importImage(image, 'https://lxdhub-dev-0.node.infra.devops.roche.com:8443', []);
-    } catch(err) {
-      console.log(err);
-    }
+    return await this.imageService.importImage(image, 'https://127.0.0.1:8443', aliases);
   }
 }

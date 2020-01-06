@@ -108,14 +108,9 @@ export class ImageService {
      * @param imageId The id of the image, which should get cloned
      * @param cloneImageDto The dto, which contains the remote information
      */
-    async importImage(image: any, remote: string, alias: string[]) {
+    async importImage(image: any, remote: string, aliases: string[]) {
         if (!image) throw new NotFoundException('Image not found');
-
-        const uuid = await this.lxdService.importImage(
-            image,
-            remote
-        );
-
-        return uuid;
+        const fingerprint = await this.lxdService.importImage(image, remote);
+        await this.lxdService.addImageAlias(remote, fingerprint, aliases);
     }
 }

@@ -3,7 +3,8 @@ import { Image, Remote } from '@lxdhub/db';
 import {
   Injectable,
   Inject,
-  InternalServerErrorException
+  InternalServerErrorException,
+  ConflictException
 } from '@nestjs/common';
 import Axios, { AxiosInstance } from 'axios';
 
@@ -30,12 +31,13 @@ export class LXDService {
       rejectUnauthorized: false
     };
 
-    if (this.settings.lxd && this.settings.lxd.key) {
-      options.key = this.settings.lxd.key;
-    }
-
-    if (this.settings.lxd && this.settings.lxd.cert) {
-      options.cert = this.settings.lxd.cert;
+    if (this.settings.lxd) {
+      if (this.settings.lxd.key) {
+        options.key = this.settings.lxd.key;
+      }
+      if (this.settings.lxd.cert) {
+        options.cert = this.settings.lxd.cert;
+      }
     }
 
     return this.axios.create({
@@ -116,24 +118,69 @@ export class LXDService {
 
   async importImage(image: any, remote: string) {
     const axios = this.getAxiosHttpsInstance();
+    const operation = (await axios.post(`${remote}/1.0/images`, image.buffer, {
+      headers: {
+        'X-LXD-Public': '1',
+      },
+      maxContentLength: Infinity
+    })).data.operation;
 
-    try {
-      const data = (await axios.post(`${remote}/1.0/images`, image.buffer, {
-        headers: {
-          'X-LXD-Public': '1',
-        },
-        maxContentLength: Infinity
-      })).data;
-
-        // wait for the import operation to finish
-      return (await axios.get(`${remote}/${data.operation}`)).data;
-    } catch (err) {
-      console.log(err.stack);
-      throw err;
+    const result = (await axios.get(`${remote}/${operation}/wait`)).data;
+    if (result.metadata.status === 'Failure') {
+      if (result.metadata.err.contains('fingerprint already exists')) {
+        // image already exists
+        throw new ConflictException(
+          result.metadata.err
+        );
+      }
+      throw new InternalServerErrorException(result.metadata.err);
     }
+
+    return result.metadata.metadata.fingerprint;
   }
 
-  async addImageAlias(fingerprint: string, aliases: string[]) {
+  async addImageAlias(remote: string, fingerprint: string, aliases: string[], force = false) {
+    const axios = this.getAxiosHttpsInstance();
 
+    const existingAliases = (await axios.get(`${remote}/1.0/images/aliases`)).data.metadata;
+    const [newAliases, conflictingAliases] = [[], []];
+
+    for (const alias of aliases) {
+      const exists = existingAliases.some((existingAlias) =>
+        existingAlias.endsWith(alias)
+      );
+      if (exists) {
+        conflictingAliases.push(alias);
+      } else {
+        newAliases.push(alias);
+      }
+    }
+
+    if (conflictingAliases.length) {
+      if (!force) {
+        throw new ConflictException(
+          `Aliases ${conflictingAliases.join(',')} already exist`
+        );
+      } else {
+        // overwrite aliases
+        await Promise.all(conflictingAliases.map((alias: string) => axios.put(
+          `${remote}/1.0/images/aliases/${alias}`,
+          {
+            description: `Alias ${alias} for ${fingerprint}`,
+            target: fingerprint,
+          }
+        )));
+      }
+    }
+
+    // add new aliases
+    await Promise.all(newAliases.map((alias: string) => axios.post(
+      `${remote}/1.0/images/aliases`,
+      {
+        description: `Alias ${alias} for ${fingerprint}`,
+        target: fingerprint,
+        name: alias
+      }
+    )));
   }
 }
