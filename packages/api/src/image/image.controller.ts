@@ -108,8 +108,9 @@ export class ImageController {
   @UseInterceptors(FileInterceptor('image'))
   async import(
     @UploadedFile() image,
-    @Body('aliases') aliases: string[]
+    @Body('aliases') aliases: string[],
+    @Body('remote') remote: string
   ) {
-    return await this.imageService.importImage(image, 'https://127.0.0.1:8443', aliases);
+    return await this.imageService.importImage(image, remote, aliases);
   }
 }

@@ -116,7 +116,12 @@ export class LXDService {
     );
   }
 
-  async importImage(image: any, remote: string) {
+  /**
+   * Adds an image to a any given remote
+   * @param image The image binary data
+   * @param remote The remote to add the image to (format: https://localhost:8334)
+   */
+  async importImage(remote: string, image: any) {
     const axios = this.getAxiosHttpsInstance();
     const operation = (await axios.post(`${remote}/1.0/images`, image.buffer, {
       headers: {
@@ -139,6 +144,13 @@ export class LXDService {
     return result.metadata.metadata.fingerprint;
   }
 
+  /**
+   * Tags an image with some aliases
+   * @param remote The remote to add the aliases to (format: https://localhost:8334)
+   * @param fingerprint The SHA-fingerprint of the image to add the alias to
+   * @param aliases The aliases to add
+   * @param force Wether to overwrite already existing aliases
+   */
   async addImageAlias(remote: string, fingerprint: string, aliases: string[], force = false) {
     const axios = this.getAxiosHttpsInstance();
 
