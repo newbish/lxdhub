@@ -17,7 +17,7 @@ export class StartOptions extends Options {
     description: 'The host of the database to connect to. Default is localhost',
     type: String
   })
-  databaseHost: string = 'postgres';
+  databaseHost: string = 'localhost';
 
   @option({
     description: 'The database password for the given user. Default is lxdhub',
