@@ -44,6 +44,8 @@ lxdhub-dbsync start -c ./lxdhub.yml
 
 ```bash
 npm install -s @lxdhub/dbsync
+# run the dbsync
+/usr/bin/lxdhub-dbsync start --config /path/to/lxdhub.yml
 ```
 
 Example usage in NodeJS
