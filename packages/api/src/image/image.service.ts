@@ -108,6 +108,10 @@ export class ImageService {
         if (!image) throw new NotFoundException('Image not found');
         const fingerprint = await this.lxdService.importImage(remote, image);
         if (aliases) {
+            if (!Array.isArray(aliases)) {
+                // TODO: wtf js?
+                aliases = [aliases];
+            }
             await this.lxdService.addImageAlias(remote, fingerprint, aliases, true);
         }
 
