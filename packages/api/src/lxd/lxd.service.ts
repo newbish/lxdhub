@@ -131,8 +131,16 @@ export class LXDService {
     })).data.operation;
 
     const result = (await axios.get(`${remote}/${operation}/wait`)).data;
-    if (result.metadata.status === 'Failure') {
-      if (result.metadata.err.contains('fingerprint already exists')) {
+    if (
+      result &&
+      result.metadata &&
+      result.metadata.status &&
+      result.metadata.status === 'Failure'
+    ) {
+      if (
+        result.metadata.err &&
+        result.metadata.err.includes('fingerprint already exists')
+      ) {
         // image already exists
         throw new ConflictException(
           result.metadata.err

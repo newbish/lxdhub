@@ -21,5 +21,6 @@ new LXDHubAPI({
         username: process.env.POSTGRES_USER || 'lxdhub',
         password: process.env.POSTGRES_PASSWORD || 'lxdhub',
         database: process.env.POSTGRES_DATABASE || 'lxdhub'
-    }
+    },
+    upload: false
 }).run();

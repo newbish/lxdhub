@@ -61,6 +61,11 @@ export class StartOptions extends Options {
         description: 'The url to the swagger documentation'
     })
     docUrl: string = '/api/v1/doc';
+
+    @option({
+        description: 'If the image upload is enabled'
+    })
+    upload: boolean = false;
 }
 
 @command({
@@ -88,7 +93,8 @@ export default class extends Command {
                 cert: fs.readFileSync(options.cert || `${process.env.HOME}/.config/lxc/client.crt`),
                 // @ts-ignore
                 key: fs.readFileSync(options.key || `${process.env.HOME}/.config/lxc/client.key`)
-            }
+            },
+            upload: options.upload || false
         };
 
         await new LXDHubAPI(apiOptions).run();

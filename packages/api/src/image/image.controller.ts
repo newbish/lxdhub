@@ -12,7 +12,9 @@ import {
   NotFoundException,
   InternalServerErrorException,
   UploadedFile,
-  Logger
+  Logger,
+  Inject,
+  ForbiddenException
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 
@@ -21,6 +23,7 @@ import { ResponseDto } from '@lxdhub/interfaces';
 import { ImageService } from './image.service';
 import { ImageListItemInterceptor } from './interceptors/image-list-item.interceptor';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { LXDHubAPISettings } from '../main';
 
 /**
  * The Image Controller, which is the API
@@ -31,6 +34,8 @@ export class ImageController {
   private logger;
   constructor(
     private readonly imageService: ImageService,
+    @Inject('LXDHubAPISettings')
+    private settings: LXDHubAPISettings
   ) {
     this.logger = new Logger('image.controller');
   }
@@ -111,6 +116,10 @@ export class ImageController {
     @Body('aliases') aliases: string[],
     @Body('remote') remote: string
   ) {
-    return await this.imageService.importImage(image, remote, aliases);
+    if (this.settings.upload) {
+      return await this.imageService.importImage(image, remote, aliases);
+    } else {
+      throw new ForbiddenException('Image upload is disabled!');
+    }
   }
 }

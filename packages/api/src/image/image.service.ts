@@ -107,7 +107,9 @@ export class ImageService {
     async importImage(image: any, remote: string, aliases: string[]) {
         if (!image) throw new NotFoundException('Image not found');
         const fingerprint = await this.lxdService.importImage(remote, image);
-        await this.lxdService.addImageAlias(remote, fingerprint, aliases, true);
+        if (aliases) {
+            await this.lxdService.addImageAlias(remote, fingerprint, aliases, true);
+        }
 
         // FIXME: add image to the database, this can't be done right now
         // because a big rework would be needed in order to do this in the
