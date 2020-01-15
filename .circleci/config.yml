@@ -108,17 +108,9 @@ workflows:
       - lockfile_upload:
           requires:
             - test
-      - build_lxdhub_image
+      - build_lxdhub_image:
+          requires:
+            - npm_deploy
       - npm_deploy:
           requires:
             - test
-
-      # - deploy_docker:
-      #     filters:
-      #       branches:
-      #         ignore: /.*/
-      #       tags:
-      #         only: /^v.*/
-      #     requires:
-      #       - test
-
