@@ -91,12 +91,12 @@ export class LXDService {
       // The operation uuid
       return operation.metadata.id;
     } catch (err) {
-      if (err && err.error_code === 403) {
+      if (err?.error_code === 403) {
         throw new InternalServerErrorException(
           'Server certificate is not valid. Contact a server administrator'
         );
       }
-      if (err && err.error_code === 500) {
+      if (err?.error_code === 500) {
         throw new InternalServerErrorException(
           'The destination LXD remote is not reachable'
         );
@@ -131,16 +131,8 @@ export class LXDService {
     }));
 
     const result = (await axios.get(`${remote}/${operation}/wait`)).data;
-    if (
-      result &&
-      result.metadata &&
-      result.metadata.status &&
-      result.metadata.status === 'Failure'
-    ) {
-      if (
-        result.metadata.err &&
-        result.metadata.err.includes('fingerprint already exists')
-      ) {
+    if (result?.medatada?.status === 'Failure') {
+      if ((result.metadata?.err ?? '').includes('fingerprint already exists')) {
         // image already exists
         throw new ConflictException(
           result.metadata.err

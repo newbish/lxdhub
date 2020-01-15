@@ -77,24 +77,24 @@ export default class extends Command {
         options: StartOptions
     ) {
         const apiOptions: LXDHubAPISettings = {
-            port: options.port || 3000,
-            hostUrl: options.host || '0.0.0.0',
-            logLevel: options.logLevel || 'info',
-            docUrl: options.docUrl || '/api/v1/doc',
+            port: options.port ?? 3000,
+            hostUrl: options.host ?? '0.0.0.0',
+            logLevel: options.logLevel ?? 'info',
+            docUrl: options.docUrl ?? '/api/v1/doc',
             database: {
-                database: options.databaseName || 'lxdhub',
-                host: options.databaseHost || 'localhost',
-                password: options.databasePassword || 'lxdhub',
-                port: options.databasePort || 5432,
-                username: options.databaseUsername || 'lxdhub'
+                database: options.databaseName ?? 'lxdhub',
+                host: options.databaseHost ?? 'localhost',
+                password: options.databasePassword ?? 'lxdhub',
+                port: options.databasePort ?? 5432,
+                username: options.databaseUsername ?? 'lxdhub'
             },
             lxd: {
                 // @ts-ignore
-                cert: fs.readFileSync(options.cert || `${process.env.HOME}/.config/lxc/client.crt`),
+                cert: fs.readFileSync(options.cert ?? `${process.env.HOME}/.config/lxc/client.crt`),
                 // @ts-ignore
-                key: fs.readFileSync(options.key || `${process.env.HOME}/.config/lxc/client.key`)
+                key: fs.readFileSync(options.key ?? `${process.env.HOME}/.config/lxc/client.key`)
             },
-            upload: options.upload || false
+            upload: options.upload ?? false
         };
 
         await new LXDHubAPI(apiOptions).run();
