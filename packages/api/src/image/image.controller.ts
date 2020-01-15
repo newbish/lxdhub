@@ -24,6 +24,7 @@ import { ImageService } from './image.service';
 import { ImageListItemInterceptor } from './interceptors/image-list-item.interceptor';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { LXDHubAPISettings } from '../main';
+import { ImportImageDto } from './dtos/import-image.dto';
 
 /**
  * The Image Controller, which is the API
@@ -112,12 +113,13 @@ export class ImageController {
   @ApiResponse({ status: 200, description: 'The image was imported successfully' })
   @UseInterceptors(FileInterceptor('image'))
   async import(
-    @UploadedFile() image,
-    @Body('aliases') aliases: string[],
-    @Body('remote') remote: string
+    @UploadedFile()
+    image,
+    @Body()
+    body: ImportImageDto
   ) {
     if (this.settings.upload) {
-      return await this.imageService.importImage(image, remote, aliases);
+      return await this.imageService.importImage(image, body.remote, body.aliases);
     } else {
       throw new ForbiddenException('Image upload is disabled!');
     }

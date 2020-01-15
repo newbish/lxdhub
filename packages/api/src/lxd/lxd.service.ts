@@ -123,12 +123,12 @@ export class LXDService {
    */
   async importImage(remote: string, image: any) {
     const axios = this.getAxiosHttpsInstance();
-    const operation = (await axios.post(`${remote}/1.0/images`, image.buffer, {
+    const { data: { operation } } = (await axios.post(`${remote}/1.0/images`, image.buffer, {
       headers: {
         'X-LXD-Public': '1',
       },
       maxContentLength: Infinity
-    })).data.operation;
+    }));
 
     const result = (await axios.get(`${remote}/${operation}/wait`)).data;
     if (
