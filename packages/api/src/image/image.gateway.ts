@@ -54,7 +54,7 @@ export class ImageGateway {
         // Wait until cloning is done
         this.logger.info(`Waiting for clone status for remote#${destinationRemote.id} ${destinationRemote.name}:`);
         try {
-            const response = await this.lxdService.getCloneStatus(destinationRemote, data.operation);
+            const response = await this.lxdService.wait(destinationRemote.serverUrl, data.operation);
         } catch (err) {
             this.logger.error(err.message);
             throw new InternalServerErrorException('Failed requesting image clone status');

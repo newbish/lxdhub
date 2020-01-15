@@ -7,6 +7,7 @@ import {
 } from './dtos';
 import { ImageController } from './image.controller';
 import { ImageService } from './image.service';
+import { LXDHubAPISettings } from '../main';
 import { PaginationResponseDto, ResponseDto } from '../common';
 
 class ImageServiceMock {
@@ -14,12 +15,15 @@ class ImageServiceMock {
   async findOne() {}
   async cloneImage() {}
 }
+
+class LXDHubAPISettingsMock { }
 /**
  * Test cases for the image controller
  */
 describe('ImageController', () => {
   let imageController: ImageController;
   let imageService: ImageService;
+  let apiSettings: LXDHubAPISettings;
 
   beforeEach(async () => {
     // Mock Image Module
@@ -29,13 +33,18 @@ describe('ImageController', () => {
         {
           provide: 'ImageService',
           useClass: ImageServiceMock
-        }
+        },
+        {
+          provide: 'LXDHubAPISettings',
+          useClass: LXDHubAPISettingsMock
+        },
       ]
     }).compile();
 
     // Get the imageController and imageService in the Testing Module Context
     imageController = module.get<ImageController>(ImageController);
     imageService = module.get<ImageService>(ImageService);
+    apiSettings = module.get<LXDHubAPISettings>(LXDHubAPISettings);
   });
 
   describe('findByRemote', () => {

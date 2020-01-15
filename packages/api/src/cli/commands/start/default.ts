@@ -25,7 +25,7 @@ export class StartOptions extends Options {
     @option({
         description: 'The host of the database to connect to. Default is localhost'
     })
-    databaseHost: string = 'postgres';
+    databaseHost: string = 'localhost';
 
     @option({
         description: 'The database password for the given user. Default is lxdhub'
@@ -61,6 +61,11 @@ export class StartOptions extends Options {
         description: 'The url to the swagger documentation'
     })
     docUrl: string = '/api/v1/doc';
+
+    @option({
+        description: 'If the image upload is enabled'
+    })
+    upload: boolean = false;
 }
 
 @command({
@@ -72,23 +77,24 @@ export default class extends Command {
         options: StartOptions
     ) {
         const apiOptions: LXDHubAPISettings = {
-            port: options.port || 3000,
-            hostUrl: options.host || '0.0.0.0',
-            logLevel: options.logLevel || 'info',
-            docUrl: options.docUrl || '/api/v1/doc',
+            port: options.port ?? 3000,
+            hostUrl: options.host ?? '0.0.0.0',
+            logLevel: options.logLevel ?? 'info',
+            docUrl: options.docUrl ?? '/api/v1/doc',
             database: {
-                database: options.databaseName || 'lxdhub',
-                host: options.databaseHost || 'localhost',
-                password: options.databasePassword || 'lxdhub',
-                port: options.databasePort || 5432,
-                username: options.databaseUsername || 'lxdhub'
+                database: options.databaseName ?? 'lxdhub',
+                host: options.databaseHost ?? 'localhost',
+                password: options.databasePassword ?? 'lxdhub',
+                port: options.databasePort ?? 5432,
+                username: options.databaseUsername ?? 'lxdhub'
             },
             lxd: {
                 // @ts-ignore
-                cert: fs.readFileSync(options.cert || `${process.env.HOME}/.config/lxc/client.crt`),
+                cert: fs.readFileSync(options.cert ?? `${process.env.HOME}/.config/lxc/client.crt`),
                 // @ts-ignore
-                key: fs.readFileSync(options.key || `${process.env.HOME}/.config/lxc/client.key`)
-            }
+                key: fs.readFileSync(options.key ?? `${process.env.HOME}/.config/lxc/client.key`)
+            },
+            upload: options.upload ?? false
         };
 
         await new LXDHubAPI(apiOptions).run();

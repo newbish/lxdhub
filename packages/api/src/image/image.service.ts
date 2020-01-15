@@ -1,17 +1,13 @@
 import { Inject, NotFoundException } from '@nestjs/common';
-import { Image } from '@lxdhub/db';
 
 import { CloneImageDto, CloneImageResponseDto, ImageDetailDto, ImageListItemDto } from '.';
 import { PaginationOptionsDto, PaginationResponseDto, ResponseDto } from '../common';
-import { ImageAvailabilityService } from '../image-availability/image-availability.service';
 import { LXDService } from '../lxd/lxd.service';
 import { SearchDictionary, SearchService } from '../search';
 import { ImageDetailFactory, ImageListItemFactory } from './factories';
 import { ImageRepository } from './image.repository';
 import { ImageSearchLiteral } from './interfaces';
-import { InjectRepository } from '@nestjs/typeorm';
 import { RemoteService } from '../remote';
-import { Connection } from 'typeorm';
 
 /**
  * Interface between the Database and API for
@@ -101,5 +97,26 @@ export class ImageService {
             destinationRemote);
 
         return new ResponseDto<CloneImageResponseDto>({ uuid });
+    }
+
+    /**
+     * Imports and tags an image
+     * @param remote The id of the image, which should get cloned
+     * @param cloneImageDto The dto, which contains the remote information
+     */
+    async importImage(image: any, remote: string, aliases: string[]) {
+        if (!image) throw new NotFoundException('Image not found');
+        const fingerprint = await this.lxdService.importImage(remote, image);
+        if (aliases) {
+            if (!Array.isArray(aliases)) {
+                // TODO: wtf js?
+                aliases = [aliases];
+            }
+            await this.lxdService.addImageAlias(remote, fingerprint, aliases, true);
+        }
+
+        // FIXME: add image to the database, this can't be done right now
+        // because a big rework would be needed in order to do this in the
+        // api comopnent, because much of the logic is in the dbsync component
     }
 }

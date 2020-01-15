@@ -23,18 +23,19 @@
     },
     "devDependencies": {
         "@types/node": "12.12.1",
+        "fs-extra": "8.1.0",
+        "js-yaml": "3.13.1",
         "lerna": "3.18.3",
         "rimraf": "3.0.0",
         "tslint": "5.19.0",
-        "typescript": "3.6.2",
-        "js-yaml": "3.13.1",
-        "fs-extra": "8.1.0"
+        "typescript": "^3.7.4"
     },
     "dependencies": {
         "@lxdhub/web": "1.10.1",
         "express": "4.17.1",
         "minimist": "1.2.0",
-        "sqlite3": "4.1.0"
+        "sqlite3": "4.1.0",
+        "ts-jest": "^24.3.0"
     },
     "license": "Apache-2.0",
     "keywords": [

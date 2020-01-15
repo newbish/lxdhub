@@ -31,6 +31,7 @@ export class LXDHubAPISettings {
     lxd?: Interfaces.ILXDRemoteAuthentication;
     logLevel?: LogType = 'silly';
     docUrl: string = '/api/v1/doc';
+    upload: boolean = false;
 }
 
 /**

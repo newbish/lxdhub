@@ -30,4 +30,4 @@
     name: "run lxdhub dbsync"
     user: "lxdhub"
     minute: "0,15,30,45"
-    job: "/usr/bin/lxdhub-dbsync start --config /var/lib/lxdhub/lxdhub/lxdhub.yml 2>&1 | /usr/bin/logger -t lxdhub-dbsync"
+    job: "/usr/bin/lxdhub-dbsync start --config /var/lib/lxdhub/lxdhub.yml 2>&1 | /usr/bin/logger -t lxdhub-dbsync"

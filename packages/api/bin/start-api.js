@@ -3,18 +3,16 @@ const { LXDHubAPI } = require('../lib');
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.join(__dirname, '../../..');
-
-const certPath = process.env.LXD_CERT || 'certificates/client.crt';
-const keyPath = process.env.LXD_KEY || 'certificates/client.key';
+const certPath = process.env.LXD_CERT || `${process.env.HOME}/.config/lxc/client.crt`;
+const keyPath = process.env.LXD_KEY || `${process.env.HOME}/.config/lxc/client.key`;
 
 new LXDHubAPI({
     hostUrl: '0.0.0.0',
     port: 3000,
     logLevel: 'silly',
     lxd: {
-        cert: fs.readFileSync(path.join(ROOT, certPath)),
-        key: fs.readFileSync(path.join(ROOT, keyPath))
+        cert: fs.readFileSync(certPath),
+        key: fs.readFileSync(keyPath)
     },
     docUrl: '/api/v1/doc',
     database: {
@@ -23,5 +21,6 @@ new LXDHubAPI({
         username: process.env.POSTGRES_USER || 'lxdhub',
         password: process.env.POSTGRES_PASSWORD || 'lxdhub',
         database: process.env.POSTGRES_DATABASE || 'lxdhub'
-    }
+    },
+    upload: false
 }).run();

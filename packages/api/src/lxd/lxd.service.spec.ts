@@ -110,7 +110,7 @@ describe('LXDService', () => {
     });
   });
 
-  describe('getCloneStatus', () => {
+  describe('wait', () => {
     it('should correctly create requests ', async () => {
       const axiosRequest = new AxiosRequestMock();
       jest.spyOn(axios, 'create').mockImplementation(() => axiosRequest as any);
@@ -123,8 +123,8 @@ describe('LXDService', () => {
         .spyOn(axiosRequest, 'get')
         .mockImplementation(() => Promise.resolve({}));
 
-      await lxdService.getCloneStatus(
-        { serverUrl: 'https://destination.com' } as Remote,
+      await lxdService.wait(
+        'https://destination.com',
         '1'
       );
       expect(axiosRequest.get).toHaveBeenCalledWith(
