@@ -89,7 +89,7 @@ jobs:
           lxc exec lxdhub -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
           lxc exec lxdhub -- apt update
           lxc exec lxdhub -- apt install --yes python
-          ansible-playbook ansible/install-lxdhub.yml -c lxd -i lxdhub,
+          ansible-playbook ansible/install-lxdhub.yml -c lxd -i lxdhub, -vvv
           lxc stop lxdhub
           lxc publish local:lxdhub --alias lxdhub description="lxdhub $CIRCLE_SHA1 ($(date +%Y%m%d_%H:%M))" --public
           lxc image export local:lxdhub /tmp/lxdhub-img --quiet
