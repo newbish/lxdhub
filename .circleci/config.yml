@@ -53,9 +53,8 @@ jobs:
   npm_deploy:
     <<: *job_common
     steps:
-      - <<: *restore
+      - checkout
       - run: 'sudo yarn global add lerna'
-      - run: 'sudo apt update && sudo apt install --yes git'
       - run: 'npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN'
       - run: 'lerna publish --yes --canary --no-git-tag-version --no-verify-access --dist-tag unstable'
 
@@ -110,7 +109,10 @@ workflows:
           requires:
             - test
       - build_lxdhub_image
-      - npm_deploy
+      - npm_deploy:
+          requires:
+            - test
+
       # - deploy_docker:
       #     filters:
       #       branches:
