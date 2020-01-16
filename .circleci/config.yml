@@ -59,7 +59,9 @@ jobs:
       - checkout
       - run: |
           sudo yarn global add lerna
+          sudo yarn global add typescript
           npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+          yarn --frozen-lockfile
           lerna publish --yes --canary --no-git-tag-version --no-verify-access --dist-tag $([ -z "$CIRCLE_TAG" ] && echo "unstable" || echo "latest")
 
 
