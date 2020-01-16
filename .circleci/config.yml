@@ -62,7 +62,7 @@ jobs:
           sudo yarn global add typescript
           npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
           yarn --frozen-lockfile
-          lerna publish --yes --canary --no-git-tag-version --no-verify-access --dist-tag $([ -z "$CIRCLE_TAG" ] && echo "unstable" || echo "latest")
+          lerna publish --yes --canary --no-git-tag-version --no-verify-access --dist-tag $(git describe --exact-match HEAD &> /dev/null && echo "latest" || echo "unstable")
 
 
   build_lxdhub_image:
@@ -89,7 +89,7 @@ jobs:
           lxc exec lxdhub -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
           lxc exec lxdhub -- apt update
           lxc exec lxdhub -- apt install --yes python
-          ansible-playbook ansible/install-lxdhub.yml -c lxd -i lxdhub, -e lxdhub_version="$([ ! -z \"$CIRCLE_TAG\" ] && echo 'unstable' || echo 'latest')" -vvv
+          ansible-playbook ansible/install-lxdhub.yml -c lxd -i lxdhub, -e lxdhub_version="$(git describe --exact-match HEAD &> /dev/null && echo 'latest' || echo 'unstable')" -vvv
           lxc stop lxdhub
           lxc publish local:lxdhub --alias lxdhub description="lxdhub $CIRCLE_SHA1 ($(date +%Y%m%d_%H:%M))" --public
           lxc image export local:lxdhub /tmp/lxdhub-img --quiet
