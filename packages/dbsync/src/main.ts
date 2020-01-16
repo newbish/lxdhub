@@ -31,8 +31,8 @@ export class LXDHubDbSync implements Interfaces.ILXDHubService {
       AppModule.forRoot(this.settings)
     );
     this.app.enableShutdownHooks();
-    this.appService = this.app.get(AppService);
     this.databaseService = this.app.get(DatabaseService);
+    this.appService = this.app.get(AppService);
   }
 
   /**

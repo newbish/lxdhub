@@ -9,6 +9,7 @@ export class SyncRunService {
     @InjectRepository(SyncRun)
     private readonly syncRunRepository: Repository<SyncRun>
   ) {}
+
   private findOne(id: number) {
     return this.syncRunRepository.findOne({ where: { id } });
   }
@@ -22,7 +23,8 @@ export class SyncRunService {
     const syncRun = await this.findOne(id);
     syncRun.state = SyncState.RUNNING;
     syncRun.started = Date.now();
-    return syncRun.save();
+    await this.syncRunRepository.save(syncRun);
+    return syncRun;
   }
 
   async failSyncRun(id: number, message: string): Promise<SyncRun> {
@@ -30,14 +32,16 @@ export class SyncRunService {
     syncRun.state = SyncState.FAILED;
     syncRun.error = message;
     syncRun.ended = Date.now();
-    return syncRun.save();
+    await this.syncRunRepository.save(syncRun);
+    return syncRun;
   }
 
   async finishSyncRun(id: number): Promise<SyncRun> {
     const syncRun = await this.findOne(id);
     syncRun.state = SyncState.SUCCEEDED;
     syncRun.ended = Date.now();
-    return syncRun.save();
+    await this.syncRunRepository.save(syncRun);
+    return syncRun;
   }
 
   async resetAllSyncStates(): Promise<SyncRun[]> {
