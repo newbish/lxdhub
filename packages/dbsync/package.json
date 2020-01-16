@@ -18,6 +18,7 @@
         "@nestjs/core": "6.6.2",
         "@nestjs/testing": "6.8.3",
         "@nestjs/typeorm": "6.2.0",
+        "typeorm": "0.2.22",
         "aigle": "1.14.1",
         "clime": "0.5.10",
         "fs-extra": "8.1.0",
@@ -27,8 +28,7 @@
         "pg": "7.12.1",
         "pretty-bytes": "^5.3.0",
         "reflect-metadata": "0.1.13",
-        "rxjs": "6.5.2",
-        "typeorm": "0.2.18"
+        "rxjs": "6.5.2"
     },
     "publishConfig": {
         "access": "public"

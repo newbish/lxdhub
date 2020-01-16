@@ -7,6 +7,9 @@
         "build": "tsc -p tsconfig.build.json",
         "prepare": "npm run build"
     },
+    "devDependencies": {
+        "@types/node": "13.1.7"
+    },
     "publishConfig": {
         "access": "public"
     },
