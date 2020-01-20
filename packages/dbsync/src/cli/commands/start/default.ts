@@ -82,7 +82,7 @@ export default class extends Command {
     };
 
     const lxd = {
-      cert: fs.readFile(options.cert.fullName),
+      cert: fs.readFileSync(options.cert.fullName),
       key: fs.readFileSync(options.key.fullName)
     };
 
