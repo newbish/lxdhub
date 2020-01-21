@@ -1,6 +1,6 @@
 {
     "name": "@lxdhub/dbsync",
-    "version": "1.10.3",
+    "version": "1.10.4",
     "description": "Display, search and copy LXD-images using a web interface.",
     "main": "lib/index.js",
     "scripts": {
