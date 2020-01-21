@@ -91,7 +91,7 @@ jobs:
           lxc exec lxdhub -- apt install --yes python
           ansible-playbook ansible/install-lxdhub.yml -c lxd -i lxdhub, -e lxdhub_version="$(git describe --exact-match HEAD &> /dev/null && echo 'latest' || echo 'unstable')" -vvv
           lxc stop lxdhub
-          lxc publish local:lxdhub --alias lxdhub description="lxdhub $CIRCLE_SHA1 ($(date +%Y%m%d_%H:%M))" --public
+          lxc publish local:lxdhub --alias lxdhub description="lxdhub $(git describe) ($(date +'%Y-%m-%d %H:%M'))" --public
           lxc image export local:lxdhub /tmp/lxdhub-img --quiet
       - store_artifacts:
           path: /tmp/lxdhub-img.tar.gz
