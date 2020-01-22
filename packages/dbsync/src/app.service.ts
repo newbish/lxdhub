@@ -86,6 +86,21 @@ export class AppService implements OnApplicationShutdown {
       `==> Starting database synchronization #${this.syncRun.id}`
     );
 
+    /**
+     * If we don't handle rejected promises, then tye sync run will
+     * crash the node process. We need to fail the sync run
+     * otherwise the next syncrun won't start.
+     */
+    process.on('unhandledRejection', async (reason, promise) => {
+      const error = `Unhandled Rejection at: ${promise}, reason: ${reason}`;
+      this.logger.error(error);
+      // fail the syncrun
+      await this.syncRunService.failSyncRun(
+        this.syncRun.id,
+        error
+      );
+    });
+
     try {
       await this.run();
       await this.syncRunService.finishSyncRun(this.syncRun.id);
