@@ -32,6 +32,6 @@ describe('SyncRunController', () => {
       offset: 20
     };
     await controller.findAll(paginationOptions);
-    expect(service.paginate).toBeCalledWith(paginationOptions);
+    expect(service.paginate).toHaveBeenCalledWith(paginationOptions);
   });
 });
