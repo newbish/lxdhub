@@ -1,0 +1,72 @@
+.image-detail-header {
+    background: #878787;
+    height: 250px;
+    padding: 0;
+    display: flex;
+    position: relative;
+}
+
+.image-detail-header-content {
+    flex: 1;
+}
+
+.image-description {
+    font-size: 30px;
+}
+
+.image-description-detail {
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.clone-image {
+    height: 40px;
+}
+
+.image-detail-content {
+    line-height: 25px;
+    color: #363636;
+}
+
+.detail-title {
+    width: 140px;
+    display: inline-block;
+    color: black;
+}
+
+.detail-overtitle {
+    font-size: 32px;
+    font-weight: normal;
+    margin-top: 15px;
+    color: black;
+}
+
+.image-detail-header {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.remote-icon {
+    position: relative;
+    top: 5px;
+}
+
+.remote-list {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+}
+
+.mat-chip-disabled {
+    background-color: rgba(0,0,0,.12);
+    color: rgba(0,0,0,.26);
+}
+
+.mat-chip {
+    cursor: pointer;
+    border-radius: 0px;
+}
+
+ul {
+    margin-top: 0px;
+}

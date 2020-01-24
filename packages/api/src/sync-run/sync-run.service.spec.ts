@@ -50,8 +50,8 @@ describe('SyncRunService', () => {
     };
 
     const result = await service.paginate(paginationOptions);
-    expect(factory.entitiesToDto).toBeCalledWith(syncRuns);
-    expect(repository.paginate).toBeCalledWith(paginationOptions);
+    expect(factory.entitiesToDto).toHaveBeenCalledWith(syncRuns);
+    expect(repository.paginate).toHaveBeenCalledWith(paginationOptions);
     expect(result).toEqual({
       limit: 20,
       offset: 20,

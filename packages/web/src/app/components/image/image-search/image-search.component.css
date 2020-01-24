@@ -1,0 +1,39 @@
+.search-field {
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    outline: none;
+}
+
+.image-search {
+    height: 100%;
+    border-top: 3px #333333 solid;
+    background: white;
+}
+
+.invalid {
+    color: #f44336;
+}
+
+.warning {
+    width: 40px;
+    height: 100%;
+    margin: 0;
+    color: #f44336;
+}
+
+.search-icon {
+    margin: 10px;
+    cursor: pointer;
+}
+
+
+@media only screen and (min-width: 64em) {
+    .image-search {
+        border-left: 3px #333333 solid;
+        border-top: none;
+    }
+}
