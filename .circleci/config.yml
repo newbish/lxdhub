@@ -25,16 +25,6 @@ machine:
     - docker
 
 jobs:
-  lockfile_update:
-    <<: *job_common
-    steps:
-      - checkout
-      - run: |
-          sudo yarn global add greenkeeper-lockfile@2
-          greenkeeper-lockfile-update
-          echo lockfile_update installed greenkeeper-lockfile and ran greenkeeper-lockfile-update
-      - <<: *save
-
   test:
     machine: true
     steps:
@@ -44,14 +34,6 @@ jobs:
           docker run -it brunnel6/lxdhub test
           docker run -it brunnel6/lxdhub lint
 
-  lockfile_upload:
-    <<: *job_common
-    steps:
-      - <<: *restore
-      - run: |
-          sudo yarn global add greenkeeper-lockfile@2
-          greenkeeper-lockfile-upload
-          echo lockfile_upload ran greenkeeper-lockfile-upload
 
   npm_deploy:
     <<: *job_common
@@ -101,13 +83,9 @@ workflows:
   version: 2
   build-test-and-deploy:
     jobs:
-      - lockfile_update
       - test:
           requires:
             - lockfile_update
-      - lockfile_upload:
-          requires:
-            - test
       - build_lxdhub_image:
           requires:
             - npm_deploy

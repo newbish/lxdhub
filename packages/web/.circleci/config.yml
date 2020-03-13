@@ -34,15 +34,6 @@ jobs:
       - checkout
       - run: docker build -t brunnerl6/lxdhub-web .
 
-  lockfile_update:
-    <<: *job_common
-    steps:
-      - checkout
-      - run: 'sudo yarn global add greenkeeper-lockfile@2'
-      - run: 'greenkeeper-lockfile-update'
-      - run: 'echo lockfile_update installed greenkeeper-lockfile and ran greenkeeper-lockfile-update'
-      - <<: *save
-
   test:
     <<: *job_common
     steps:
@@ -53,15 +44,6 @@ jobs:
           command: yarn install
       - <<: *save
       - run: yarn run test:ci
-
-  lockfile_upload:
-    <<: *job_common
-    steps:
-      - checkout
-      - <<: *restore
-      - run: 'sudo yarn global add greenkeeper-lockfile@2'
-      - run: 'greenkeeper-lockfile-upload'
-      - run: 'echo lockfile_upload ran greenkeeper-lockfile-upload'
 
   deploy_docker:
     machine: true
@@ -74,13 +56,9 @@ workflows:
   build-test-and-deploy:
     jobs:
       - build
-      - lockfile_update
       - test:
           requires:
-            - lockfile_update
-      - lockfile_upload:
-          requires:
-            - test
+            - build
       - deploy_docker:
           filters:
             branches:
@@ -88,6 +66,6 @@ workflows:
             tags:
               only: /^v.*/
           requires:
-            - lockfile_upload
+            - test
 
 
