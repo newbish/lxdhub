@@ -7,7 +7,6 @@
 <p align="center">This Repository is the Webinterface for the LXDHub REST API.</p>
 <p align="center">
   <a href="https://gitter.im/Roche/lxdhub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/Roche/lxdhub.svg" alt="Gitter" /></a>
-  <img src="https://circleci.com/gh/Roche/lxdhub.png?circle-token=dcfec05d35bc78c2dd21d39d68bb2cc71f6064ac&style=shield" alt="Circle CI Status">
   </a>
 </p>
 <p align="center">

@@ -30,6 +30,7 @@ jobs:
         yarn run test
 
     - name: publish
+      if:  github.ref == 'refs/heads/master'
       run: |
         npm install -g lerna
         npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
