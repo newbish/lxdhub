@@ -6,7 +6,6 @@
 
  <p align="center">
   <a href="https://gitter.im/Roche/lxdhub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/Roche/lxdhub.svg" alt="Gitter" /></a>
-  <a href="https://circleci.com/gh/Roche/lxdhub"><img src="https://circleci.com/gh/Roche/lxdhub.png?circle-token=f41c49274b61c18d8a5867ab9d49b9f27a2227aa&style=shield" alt="Circle CI Status"></a>
  </p>
 
 <p align="center">
